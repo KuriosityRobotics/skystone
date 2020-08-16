@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.Module;
 import org.firstinspires.ftc.teamcode.rework.Robot;
 
+import java.util.HashMap;
+
 
 public class DrivetrainModule implements Module {
     private Robot robot;
@@ -85,6 +87,16 @@ public class DrivetrainModule implements Module {
         }
 
         setMotorPowers(fLPower, fRPower, bLPower, bRPower);
+    }
+
+    public HashMap<String, String> getState() {
+        HashMap<String, String> state = new HashMap<String, String>();
+
+        state.put("yMovement", String.valueOf(yMovement)); // for some reason the compiler screams at you if you try to implicitly cast here
+        state.put("xMovement", String.valueOf(xMovement));
+        state.put("turnMovement", String.valueOf(turnMovement));
+        state.put("isSlowMode", String.valueOf(isSlowMode));
+        return state;
     }
 
     private void setMotorPowers(double fLPower, double fRPower, double bLPower, double bRPower) {

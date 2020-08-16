@@ -11,4 +11,6 @@ public class Waypoint extends Point {
         super(x,y);
         this.actions = actions;
     }
+
+
 }

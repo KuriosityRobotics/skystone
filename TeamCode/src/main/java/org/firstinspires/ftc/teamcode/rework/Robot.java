@@ -15,8 +15,10 @@ import org.firstinspires.ftc.teamcode.rework.Modules.OdometryModule;
 import org.firstinspires.ftc.teamcode.rework.Modules.DrivetrainModule;
 
 public class Robot {
-    // All modules in the robot (remember to update initModules() and updateModules() when adding)
 
+    private final int VERBOSITY = 1; // VERBOSITY > 0 will enable state logging; as we add more types of telemetry, add more levels maybe?
+
+    // All modules in the robot (remember to update initModules() and updateModules() when adding) // TODO: Convert the module list to a HashMap so we don't need to hardcode variables
     public DrivetrainModule drivetrainModule;
     public OdometryModule odometryModule;
     public long currentTimeMilli;
@@ -50,7 +52,10 @@ public class Robot {
 
         for(Module module : modules) {
             module.update();
+            if(VERBOSITY > 0)
+                telemetry.addData(module.getClass().getName(), module.getState().toString());
         }
+
     }
 
     /**

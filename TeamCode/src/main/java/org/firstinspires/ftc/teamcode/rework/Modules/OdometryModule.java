@@ -6,6 +6,8 @@ import org.firstinspires.ftc.teamcode.rework.AutoTools.RobotPosition;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.Module;
 import org.firstinspires.ftc.teamcode.rework.Robot;
 
+import java.util.HashMap;
+
 public class OdometryModule implements Module {
 
     public RobotPosition robotPosition;
@@ -44,6 +46,15 @@ public class OdometryModule implements Module {
 
     public synchronized void update() {
         calculateRobotPosition();
+    }
+
+    @Override
+    public HashMap<String, String> getState() {
+        HashMap<String,String> state = new HashMap<String, String>();
+        state.put("robotPosition.x: ", String.valueOf(robotPosition.getLocation().x));
+        state.put("robotPosition.y: ", String.valueOf(robotPosition.getLocation().y));
+        state.put("robotPosition.heading: ", String.valueOf(robotPosition.getHeading()));
+        return state;
     }
 
     /**

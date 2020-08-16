@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.rework.ModuleTools;
 
 
+import java.util.HashMap;
+
 public interface Module {
 
     /**
@@ -14,6 +16,11 @@ public interface Module {
      * on a different thread from where the states are set.
      */
     public void update();
+
+    /**
+     * Gets the state of the current module --- to be used dumping the state to logcat.
+     */
+    public HashMap<String, String> getState();
 
 
 }
