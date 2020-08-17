@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.rework.Robot.Modules;
 
 
+import java.util.HashMap;
+
 public interface Module {
     /**
      * Initializes the module. This includes setting up all motors/servos
@@ -13,4 +15,10 @@ public interface Module {
      * on a different thread from where the states are set.
      */
     public void update();
+
+    /**
+     * Gets the current state, such as position variables etc
+     * @return
+     */
+    public HashMap<String, String> getState();
 }

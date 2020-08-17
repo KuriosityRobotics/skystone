@@ -11,7 +11,14 @@ import org.firstinspires.ftc.teamcode.rework.Robot.Modules.ModuleExecutor;
 import org.firstinspires.ftc.teamcode.rework.Robot.Modules.Odometry.Odometry;
 import org.firstinspires.ftc.teamcode.rework.Robot.Modules.DrivetrainModule;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Map;
+
 public class Robot {
+    final int VERBOSITY = 1; // we can add extra verbosity values later
+
     // All modules in the robot (remember to update initModules() and updateModules() when adding)
     public DrivetrainModule drivetrain;
     public Odometry odometry;
@@ -43,15 +50,27 @@ public class Robot {
      * Updates all the modules in robot.
      */
     public void updateModules() {
-        for(Module module : modules) {
+        for (Module module : modules) {
             module.update();
+            if (VERBOSITY > 0) {
+
+
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter("debug.log"))) {
+                    for (Map.Entry<String, String> entry : module.getState().entrySet()) {
+                        writer.write(entry.getKey() + ", " + entry.getValue());
+                        writer.newLine();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     /**
      * Initializes all modules in robot. Starts another thread on which execution of the modules
      * will happen in the form of updates.
-     *
+     * <p>
      * Note that starting the thread also executes run(). However, note that run() will not update
      * the modules if the opMode is not active yet.
      */
@@ -60,12 +79,12 @@ public class Robot {
         this.drivetrain = new DrivetrainModule(this);
         this.odometry = new Odometry(this);
 
-        this.modules = new Module[] {
-            this.drivetrain, this.odometry
+        this.modules = new Module[]{
+                this.drivetrain, this.odometry
         };
 
         // Initialize modules
-        for(Module module : modules) {
+        for (Module module : modules) {
             module.init();
         }
 
@@ -127,7 +146,7 @@ public class Robot {
         return linearOpMode.opModeIsActive();
     }
 
-    public Telemetry getTelemetry(){
+    public Telemetry getTelemetry() {
         return telemetry;
     }
 }

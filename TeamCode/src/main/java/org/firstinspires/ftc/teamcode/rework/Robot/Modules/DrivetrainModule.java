@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.rework.Robot.Robot;
 
+import java.util.HashMap;
+
 
 public class DrivetrainModule implements Module {
     private Robot robot;
@@ -45,6 +47,17 @@ public class DrivetrainModule implements Module {
      */
     public synchronized void update() {
         drive();
+    }
+
+    @Override
+    public HashMap<String, String> getState() {
+        HashMap<String, String> state = new HashMap<>();
+        state.put("yMovement", String.valueOf(yMovement));
+        state.put("mecanumMovement", String.valueOf(mecanumMovement));
+        state.put("turnMovement", String.valueOf(turnMovement));
+        state.put("isSlowMode", String.valueOf(isSlowMode));
+
+        return state;
     }
 
     /**

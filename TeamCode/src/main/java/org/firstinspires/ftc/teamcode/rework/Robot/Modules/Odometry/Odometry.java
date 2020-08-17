@@ -6,6 +6,8 @@ import org.firstinspires.ftc.teamcode.rework.Robot.Auto.PathPlanning.Point;
 import org.firstinspires.ftc.teamcode.rework.Robot.Modules.Module;
 import org.firstinspires.ftc.teamcode.rework.Robot.Robot;
 
+import java.util.HashMap;
+
 /**
  * Odometry includes all everything required to calculate the robot's position throughout
  * TeleOp or Autonomous.
@@ -24,9 +26,9 @@ public class Odometry implements Module {
     private static final int RIGHT_POD_ENCODER_PORT = 1;
     private static final int MECANUM_POD_ENCODER_PORT = 2;
 
-    private double moveScaleFactor = 0.0007284406721;
-    private double turnScaleFactor = 0.00005282291078;
-    private double strafePredictionFactor = 4.5;
+    private final double MOVE_SCALE_FACTOR = 0.0007284406721;
+    private final double TURN_SCALE_FACTOR = 0.00005282291078;
+    private final double STRAFE_PREDICTION_FACTOR = 4.5;
 
     public Odometry(Robot robot) {
         this.robot = robot; // Odometry needs robot in order to be able to get data from robot
@@ -51,6 +53,15 @@ public class Odometry implements Module {
 
     public synchronized void update() {
         calculateRobotPosition();
+    }
+
+    @Override
+    public HashMap<String, String> getState() {
+        HashMap<String, String> state = new HashMap<>();
+        state.put("robotPosition.x: ", String.valueOf(robotPosition.getLocation().x));
+        state.put("robotPosition.y: ", String.valueOf(robotPosition.getLocation().y));
+        state.put("robotPosition.heading: ", String.valueOf(robotPosition.getHeading()));
+        return state;
     }
 
     public synchronized RobotPosition getRobotPosition() {
@@ -80,26 +91,26 @@ public class Odometry implements Module {
     }
 
     public void smallAngleOdometry(double dLeftPod, double dRightPod, double dMecanumPod) {
-        double dLeftPodInches = dLeftPod * moveScaleFactor;
-        double dRightPodInches = dRightPod * moveScaleFactor;
-        double dMecanumPodInches = dMecanumPod * moveScaleFactor;
+        double dLeftPodInches = dLeftPod * MOVE_SCALE_FACTOR;
+        double dRightPodInches = dRightPod * MOVE_SCALE_FACTOR;
+        double dMecanumPodInches = dMecanumPod * MOVE_SCALE_FACTOR;
 
-        robotPosition.setHeading(((dLeftPod + leftPodOldPosition) - (dRightPod + rightPodOldPosition)) * turnScaleFactor);
+        robotPosition.setHeading(((dLeftPod + leftPodOldPosition) - (dRightPod + rightPodOldPosition)) * TURN_SCALE_FACTOR);
 
-        double dAngle = (dLeftPodInches - dRightPodInches) * turnScaleFactor;
+        double dAngle = (dLeftPodInches - dRightPodInches) * TURN_SCALE_FACTOR;
         double dRobotX = (dLeftPodInches + dRightPodInches) * .5;
-        double dRobotY = dMecanumPodInches + strafePredictionFactor * dAngle;
+        double dRobotY = dMecanumPodInches + STRAFE_PREDICTION_FACTOR * dAngle;
 
         robotPosition.getLocation().x += dRobotX * Math.cos(robotPosition.getHeading() + dAngle * 0.5) - dRobotY * Math.sin(robotPosition.getHeading() + dAngle * 0.5);
         robotPosition.getLocation().y += dRobotX * Math.sin(robotPosition.getHeading() + dAngle * 0.5) + dRobotY * Math.cos(robotPosition.getHeading() + dAngle * 0.5);
     }
 
     public void circularOdometry(double dLeftPod, double dRightPod, double dMecanumPod) {
-        double dLeftPodInches = dLeftPod * moveScaleFactor;
-        double dRightPodInches = dRightPod * moveScaleFactor;
-        double dMecanumPodInches = dMecanumPod * moveScaleFactor;
+        double dLeftPodInches = dLeftPod * MOVE_SCALE_FACTOR;
+        double dRightPodInches = dRightPod * MOVE_SCALE_FACTOR;
+        double dMecanumPodInches = dMecanumPod * MOVE_SCALE_FACTOR;
 
-        double dTheta = (dLeftPodInches - dRightPodInches) * turnScaleFactor;
+        double dTheta = (dLeftPodInches - dRightPodInches) * TURN_SCALE_FACTOR;
 
         // Default changes in x' and y' directions assume no change in robot's angle
         double dYPrime = dMecanumPodInches;
@@ -110,7 +121,7 @@ public class Odometry implements Module {
 
         // Update the global angle of the robot
 //        worldAngle += dTheta;
-        robotPosition.setHeading((((dLeftPod + leftPodOldPosition) * moveScaleFactor) - ((dRightPod + rightPodOldPosition) * moveScaleFactor)) * turnScaleFactor);
+        robotPosition.setHeading((((dLeftPod + leftPodOldPosition) * MOVE_SCALE_FACTOR) - ((dRightPod + rightPodOldPosition) * MOVE_SCALE_FACTOR)) * TURN_SCALE_FACTOR);
 
         if (dTheta != 0.0) { // if robot turned
             // Calculate the trigonometry portion of the positions
