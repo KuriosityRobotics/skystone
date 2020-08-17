@@ -23,9 +23,10 @@ public class Robot {
     public OdometryModule odometryModule;
     public long currentTimeMilli;
 
-    private HardwareMap hardwareMap;
+    public HardwareMap hardwareMap;
     private Telemetry telemetry;
     private LinearOpMode linearOpMode;
+    public TelemetryDump telemetryDump;
 
     ModuleExecutor moduleExecutor;
 
@@ -40,7 +41,7 @@ public class Robot {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.linearOpMode = linearOpMode;
-
+        this.telemetryDump = new TelemetryDump(telemetry);
         initHubs();
         initModules();
     }
