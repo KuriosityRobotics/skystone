@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.rework.Robot.Modules.Module;
 import org.firstinspires.ftc.teamcode.rework.Robot.Modules.ModuleExecutor;
 import org.firstinspires.ftc.teamcode.rework.Robot.Modules.Odometry.Odometry;
 import org.firstinspires.ftc.teamcode.rework.Robot.Modules.DrivetrainModule;
+import org.firstinspires.ftc.teamcode.rework.Robot.pathfinding.geometry.Vector;
 
 public class Robot {
     // All modules in the robot (remember to update initModules() and updateModules() when adding)
