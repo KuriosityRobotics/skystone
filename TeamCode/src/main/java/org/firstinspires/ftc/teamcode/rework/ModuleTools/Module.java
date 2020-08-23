@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.rework.Robot.Modules;
+package org.firstinspires.ftc.teamcode.rework.ModuleTools;
 
 
 public interface Module {
@@ -13,4 +13,8 @@ public interface Module {
      * on a different thread from where the states are set.
      */
     public void update();
+
+    public void telemetry();
+
+    public boolean isOn();
 }

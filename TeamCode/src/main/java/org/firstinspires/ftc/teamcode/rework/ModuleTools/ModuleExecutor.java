@@ -1,19 +1,17 @@
-package org.firstinspires.ftc.teamcode.rework.Robot.Modules;
+package org.firstinspires.ftc.teamcode.rework.ModuleTools;
 
 import android.os.SystemClock;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.rework.Robot.Robot;
+import org.firstinspires.ftc.teamcode.rework.Robot;
 
 /**
  * ModuleExecutor creates a new thread where modules will be executed and data will be retrieved
  * from the hubs.
  */
 public class ModuleExecutor extends Thread {
-    /**
-     * Whether or not to telemetry data on update speed, for debugging.
-     */
-    final static boolean SHOW_UPDATE_SPEED = true;
+
+    final boolean SHOW_UPDATE_SPEED = true;
 
     Robot robot;
     Telemetry telemetry;
@@ -21,6 +19,7 @@ public class ModuleExecutor extends Thread {
     public ModuleExecutor(Robot robot, Telemetry telemetry) {
         this.robot = robot;
         this.telemetry = telemetry;
+        setName("module executor");
     }
 
     /**
@@ -31,17 +30,15 @@ public class ModuleExecutor extends Thread {
         long currentTime;
 
         while (robot.isOpModeActive()) {
-            robot.getBulkData();
-
-            robot.updateModules();
+            robot.update();
 
             if (SHOW_UPDATE_SPEED) {
                 currentTime = SystemClock.elapsedRealtime();
-
-                telemetry.addData("Module Executor thread loop time: ", currentTime - lastUpdateTime);
-
+                robot.telemetryDump.addHeader("---ModuleExector Update Speed---");
+                robot.telemetryDump.addData("Module Executor thread loop time: ", (currentTime - lastUpdateTime));
                 lastUpdateTime = currentTime;
             }
+            robot.telemetryDump.update();
         }
         System.out.println("Module executor thread exited due to opMode no longer being active.");
     }
