@@ -141,7 +141,7 @@ public class Movements {
             for (Point thisIntersection : intersections) {
 
                 double angle = Math.atan2(thisIntersection.x - center.x, thisIntersection.y - center.y) + direction;
-                double deltaAngle = Math.abs(MathFunctions.angleWrap2(angle - heading));
+                double deltaAngle = Math.abs(MathFunctions.angleWrap(angle - heading, 0));
                 double thisDistToFirst = Math.hypot(thisIntersection.x - lineStartPoint.x, thisIntersection.y - lineStartPoint.y);
 
                 if (deltaAngle < nearestAngle && thisDistToFirst > distToFirst) {
@@ -183,9 +183,9 @@ public class Movements {
         robot.telemetryDump.addData("relativeYToPoint ", relativeYToPoint);
         robot.telemetryDump.addData("relativeAngleToPoint ", relativeAngleToPoint);
 
-        double relativeTurnAngle = angleWrap2(relativeAngleToPoint + direction);
+        double relativeTurnAngle = angleWrap(relativeAngleToPoint + direction, 0);
         if (willAngleLock && isTargetingLastPoint){
-            relativeTurnAngle = angleWrap2(angleLockHeading - robot.odometryModule.worldAngleRad);
+            relativeTurnAngle = angleWrap(angleLockHeading - robot.odometryModule.worldAngleRad, 0);
         }
 
         double xPower = relativeXToPoint / (Math.abs(relativeYToPoint) + Math.abs(relativeXToPoint));
@@ -205,7 +205,7 @@ public class Movements {
     private boolean isDone(ArrayList<Waypoint> path, Point center, double heading) {
         Point endPoint = path.get(path.size() - 1).toPoint();
 
-        return (Math.hypot(center.x - endPoint.x, center.y - endPoint.y) < distanceThreshold) && (!willAngleLock || Math.abs(angleWrap2(angleLockHeading - heading)) < angleThreshold) && pathIndex == path.size() - 2;
+        return (Math.hypot(center.x - endPoint.x, center.y - endPoint.y) < distanceThreshold) && (!willAngleLock || Math.abs(angleWrap(angleLockHeading - heading, 0)) < angleThreshold) && pathIndex == path.size() - 2;
     }
 
     public boolean isFileDump(){
