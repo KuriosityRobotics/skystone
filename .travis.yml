@@ -7,3 +7,9 @@ android:
 
 before_install:
   - chmod +x gradlew
+
+git:
+  - depth: 3;
+
+script:
+  - ./TeamCode/src/main/java/org/firstinspires/ftc/teamcode/rework/Tests/MathFunctionsTest.java
