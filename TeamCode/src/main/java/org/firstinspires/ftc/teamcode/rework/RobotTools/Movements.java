@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.rework.Robot;
 import java.util.ArrayList;
 
 import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.*;
+import static org.firstinspires.ftc.teamcode.rework.RobotTools.StringHelper.concat;
 
 public class Movements {
 
@@ -85,9 +86,9 @@ public class Movements {
 
     private void pathFileDump(ArrayList<Waypoint> path){
         if(robot.WILL_FILE_DUMP){
-            robot.fileDump.setHeader(new StringBuilder().append(currentTrip).append("_path.txt").toString(),"x y");
+            robot.fileDump.setHeader(concat(robot.movements.currentTrip,"_path.txt"),"x y");
             for(int i = 0;i<path.size();i++){
-                robot.fileDump.addData(new StringBuilder().append(currentTrip).append("_path.txt").toString(), new StringBuilder().append(path.get(i).x).append(" ").append(path.get(i).y).toString());
+                robot.fileDump.addData(concat(robot.movements.currentTrip,"_path.txt"), concat(path.get(i).x," ",path.get(i).y));
             }
         }
     }

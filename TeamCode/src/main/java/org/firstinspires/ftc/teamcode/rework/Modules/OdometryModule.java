@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.Module;
 import org.firstinspires.ftc.teamcode.rework.Robot;
 
+import static org.firstinspires.ftc.teamcode.rework.RobotTools.StringHelper.concat;
+
 public class OdometryModule implements Module {
     private boolean isOn;
 
@@ -62,8 +64,8 @@ public class OdometryModule implements Module {
     }
 
     public void fileDump(){
-        robot.fileDump.setHeader(new StringBuilder().append(robot.movements.currentTrip).append("_odometry.txt").toString(),"x y h");
-        robot.fileDump.addData(new StringBuilder().append(robot.movements.currentTrip).append("_odometry.txt").toString(), new StringBuilder().append(worldX).append(" ").append(worldY).append(" ").append(Math.toDegrees(worldAngleRad)).toString());
+        robot.fileDump.setHeader(concat(robot.movements.currentTrip,"_odometry.txt"),"x y h");
+        robot.fileDump.addData(concat(robot.movements.currentTrip,"_odometry.txt"), concat(worldX, " ",worldY, " ", Math.toDegrees(worldAngleRad)));
     }
 
     /**
