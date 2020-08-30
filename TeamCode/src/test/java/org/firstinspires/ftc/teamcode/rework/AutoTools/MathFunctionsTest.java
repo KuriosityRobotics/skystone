@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.rework.AutoTools;
 
-import org.firstinspires.ftc.teamcode.rework.AutoTools.Point;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -15,19 +14,21 @@ import static org.junit.Assert.assertTrue;
 public class MathFunctionsTest {
     @Test
     public void testAngleWrap() {
-        assertTrue(angleWrap(Math.PI * 7.4) == 1.4 * Math.PI);
+        assertEquals(angleWrap(Math.PI * 7.4), (-0.6) * Math.PI, 0);
+        assertEquals(angleWrap(0), 0, 0);
+        assertEquals(angleWrap(1.75 * Math.PI), -0.25 * Math.PI, 0);
     }
 
     @Test
     public void testLinePointDistance() {
-        assertTrue(linePointDistance(new Point(1, 1), new Point(2, 2), new Point(4, 3)) == 0.4472135954999579);
+        assertEquals(linePointDistance(new Point(0,0), new Point(-1,0), new Point(1,0)), 0, 0);
+        assertEquals(linePointDistance(new Point(1,0), new Point(2,0), new Point(2,1)), 1, 0);
+        assertEquals(linePointDistance(new Point(2,3), new Point(3,0), new Point(5,2)), Math.sqrt(8), 1E-15);
     }
 
     @Test
     public void testClosestPointOnLineToPoint() {
-        Point point = closestPointOnLineToPoint(new Point(64, 23), new Point(41, 64), new Point(98,12));
-        assertTrue(point.x == 73.96673945909627);
-        assertTrue(point.y == 33.92507979170165);
+        assertEquals(closestPointOnLineToPoint(new Point(0,0), new Point(-1,-1), new Point(1,1)), new Point(0,0));
     }
 
     @Test
