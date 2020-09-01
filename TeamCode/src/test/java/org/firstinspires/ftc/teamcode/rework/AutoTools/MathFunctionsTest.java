@@ -5,8 +5,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.*;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -14,44 +16,122 @@ import static org.junit.Assert.assertTrue;
 public class MathFunctionsTest {
     @Test
     public void testAngleWrap() {
-        assertEquals(angleWrap(Math.PI * 7.4), (-0.6) * Math.PI, 0);
-        assertEquals(angleWrap(0), 0, 0);
-        assertEquals(angleWrap(1.75 * Math.PI), -0.25 * Math.PI, 0);
+        assertEquals(
+                (-0.6) * Math.PI,
+                angleWrap(Math.PI * 7.4),
+                0
+        );
+
+        assertEquals(
+                0,
+                angleWrap(0),
+                0
+        );
+
+        assertEquals(
+                -0.25 * Math.PI,
+                angleWrap(1.75 * Math.PI),
+                0
+        );
+
     }
 
     @Test
     public void testLinePointDistance() {
-        assertEquals(linePointDistance(new Point(0,0), new Point(-1,0), new Point(1,0)), 0, 0);
-        assertEquals(linePointDistance(new Point(1,0), new Point(2,0), new Point(2,1)), 1, 0);
-        assertEquals(linePointDistance(new Point(2,3), new Point(3,0), new Point(5,2)), Math.sqrt(8), 1E-15);
+        assertEquals(
+                0,
+                linePointDistance(new Point(0, 0), new Point(-1, 0), new Point(1, 0)),
+                0
+        );
+
+        assertEquals(
+                1,
+                linePointDistance(new Point(1, 0), new Point(2, 0), new Point(2, 1)),
+                0
+        );
+
+        assertEquals(
+                Math.sqrt(8),
+                linePointDistance(new Point(2, 3), new Point(3, 0), new Point(5, 2)),
+                1E-15
+        );
+
     }
 
     @Test
     public void testClosestPointOnLineToPoint() {
-        assertEquals(closestPointOnLineToPoint(new Point(0,0), new Point(-1,-1), new Point(1,1)), new Point(0,0));
+        assertEquals(
+                new Point(0, 0),
+                closestPointOnLineToPoint(new Point(0, 0), new Point(-1, -1), new Point(1, 1))
+        );
+
+        assertEquals(
+                new Point(4, 1),
+                closestPointOnLineToPoint(new Point(2, 3), new Point(3, 0), new Point(5, 2))
+        );
     }
 
     @Test
     public void testTwoLineIntersectionPoint() {
-        Point point = twoLineIntersectionPoint(new Point(-2, 6), 69, new Point(4,20), 420);
-        assertTrue(point.x == 5.139601139601139);
-        assertTrue(point.y == 498.63247863247864);
+        assertEquals(
+                new Point(4, 1),
+                twoLineIntersectionPoint(new Point(2, 3), -1, new Point(3, 0), 1)
+        );
+
+        assertEquals(
+                new Point(-3, 0),
+                twoLineIntersectionPoint(new Point(-3, 0), 1.0 / 2, new Point(-3, 0), -1.0 / 2)
+        );
+
+        assertEquals(
+                new Point(),
+                twoLineIntersectionPoint(new Point(-4, -2), 3.424342, new Point(-532, 344), 3.424342)
+        ); // Parallel lines
     }
 
     @Test
     public void testSolveQuadratic() {
-        double[] roots = solveQuadratic(1, 1, -2);
-        assertTrue(roots[0] == 1);
-        assertTrue(roots[1] == -2);
+        assertArrayEquals(
+                new double[]{1, -2},
+                solveQuadratic(1, 1, -2),
+                0
+        );
+
+        assertArrayEquals(
+                new double[]{-1, -8},
+                solveQuadratic(1, 9, 8),
+                0
+        );
+
+        double[] test3 = new double[2];
+        test3[0] = -2;
+        assertArrayEquals(
+                test3,
+                solveQuadratic(2, 8, 8),
+                0
+        );
     }
 
     @Test
     public void testLineCircleIntersection() {
-        ArrayList<Point> test1Points = new ArrayList<Point>();
-        test1Points.add(new Point(2.5240998703626616, 5.048199740725323));
-        assertEquals(
-                lineCircleIntersection(new Point(-1,-1), 7, new Point(3,6), new Point(-3,-6)),
-                test1Points
-        );
+//        ArrayList<Point> test1Points = new ArrayList<Point>();
+//        test1Points.add(new Point(-1, 0));
+//        test1Points.add(new Point(1, 0));
+//        assertEquals(
+//                test1Points,
+//                lineCircleIntersection(new Point(0, 0), 3, new Point(0, 0), new Point(1, 0)));
+//
+//        ArrayList<Point> test2Points = new ArrayList<>();
+//        assertEquals(
+//                test2Points,
+//                lineCircleIntersection(new Point(324234, 12341234), 3424, new Point(-324, -2314), new Point(-234321, -13412342))
+//        );
+//
+//        ArrayList<Point> test3Points = new ArrayList<>();
+//        test3Points.add(new Point(-3, -2));
+//        assertEquals(
+//                test3Points,
+//                lineCircleIntersection(new Point(-6, -5), 18, new Point(-3, -2), new Point(-2, -6))
+//        );
     }
 }
