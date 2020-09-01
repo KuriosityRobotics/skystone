@@ -1,0 +1,3 @@
+[submodule "TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Rework"]
+	path = TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Rework
+	url = https://github.com/KuriosityRobotics/Rework
