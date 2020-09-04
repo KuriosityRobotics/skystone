@@ -5,7 +5,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.*;
 import static org.junit.Assert.assertArrayEquals;
@@ -113,25 +112,38 @@ public class MathFunctionsTest {
     }
 
     @Test
-    public void testLineCircleIntersection() {
-//        ArrayList<Point> test1Points = new ArrayList<Point>();
-//        test1Points.add(new Point(-1, 0));
-//        test1Points.add(new Point(1, 0));
-//        assertEquals(
-//                test1Points,
-//                lineCircleIntersection(new Point(0, 0), 3, new Point(0, 0), new Point(1, 0)));
-//
-//        ArrayList<Point> test2Points = new ArrayList<>();
-//        assertEquals(
-//                test2Points,
-//                lineCircleIntersection(new Point(324234, 12341234), 3424, new Point(-324, -2314), new Point(-234321, -13412342))
-//        );
-//
-//        ArrayList<Point> test3Points = new ArrayList<>();
-//        test3Points.add(new Point(-3, -2));
-//        assertEquals(
-//                test3Points,
-//                lineCircleIntersection(new Point(-6, -5), 18, new Point(-3, -2), new Point(-2, -6))
-//        );
+    public void testLineSegmentCircleIntersection() {
+        ArrayList<Point> test1Points = new ArrayList<Point>();
+        test1Points.add(new Point(3, 0));
+        test1Points.add(new Point(-3, 0));
+        assertEquals(
+                test1Points,
+                lineSegmentCircleIntersection(new Point(0, 0), 3, new Point(-10, 0), new Point(10,0)));
+
+        ArrayList<Point> test2Points = new ArrayList<Point>();
+        test1Points.add(new Point(0,6));
+        test1Points.add(new Point(0,-6));
+        assertEquals(
+                test2Points,
+                lineSegmentCircleIntersection(new Point(0, 0), 6, new Point(0,100), new Point(0,-100)));
+
+        ArrayList<Point> test3Points = new ArrayList<>();
+        assertEquals(
+                test3Points,
+                lineSegmentCircleIntersection(new Point(324234, 12341234), 3424, new Point(-324, -2314), new Point(-234321, -13412342))
+        );
+
+        ArrayList<Point> test4Points = new ArrayList<>();
+        test3Points.add(new Point(-3, -2));
+        assertEquals(
+                test4Points,
+                lineSegmentCircleIntersection(new Point(-6, -5), 18, new Point(-4, 2), new Point(-2, -6))
+        );
+
+        ArrayList<Point> test5Points = new ArrayList<>();
+        assertEquals(
+                test5Points,
+                lineSegmentCircleIntersection(new Point(-12348,-234987), 18, new Point(-4, 2), new Point(-4, -2 - Double.MIN_VALUE))
+        );
     }
 }
