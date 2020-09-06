@@ -21,10 +21,12 @@ public class DrivetrainModule implements Module, TelemetryProvider {
     public double yMovement;
     public double xMovement;
     public double turnMovement;
+    public boolean isSlowMode;
 
     // Constants
     private final static double POWER_SCALE_FACTOR = 0.8;
     private final static double MECANUM_POWER_SCALE_FACTOR = 1.414;
+    private final static double SLOW_MODE_FACTOR = 0.5;
 
     // Motors
     private DcMotor fLeft;
@@ -79,19 +81,23 @@ public class DrivetrainModule implements Module, TelemetryProvider {
         bLPower *= scaleDown;
         bRPower *= scaleDown;
 
-
         fLPower *= POWER_SCALE_FACTOR;
         fRPower *= POWER_SCALE_FACTOR;
         bLPower *= POWER_SCALE_FACTOR;
         bRPower *= POWER_SCALE_FACTOR;
 
+        if (isSlowMode) {
+            fLPower *= SLOW_MODE_FACTOR;
+            fRPower *= SLOW_MODE_FACTOR;
+            bLPower *= SLOW_MODE_FACTOR;
+            bRPower *= SLOW_MODE_FACTOR;
+        }
+
         setMotorPowers(fLPower, fRPower, bLPower, bRPower);
     }
     
 
-    public void fileDump(){
-
-    }
+    public void fileDump(){}
 
     private void setMotorPowers(double fLPower, double fRPower, double bLPower, double bRPower) {
         fLeft.setPower(fLPower);

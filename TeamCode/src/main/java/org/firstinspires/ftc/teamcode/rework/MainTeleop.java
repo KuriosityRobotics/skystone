@@ -5,11 +5,8 @@ import android.os.SystemClock;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.TelemetryProvider;
-import org.firstinspires.ftc.teamcode.rework.RobotTools.TelemetryDump;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 @TeleOp
 public class MainTeleop extends LinearOpMode implements TelemetryProvider {

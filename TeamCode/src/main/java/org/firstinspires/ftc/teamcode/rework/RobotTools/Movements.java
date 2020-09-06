@@ -8,27 +8,24 @@ import org.firstinspires.ftc.teamcode.rework.ModuleTools.TelemetryProvider;
 import org.firstinspires.ftc.teamcode.rework.Robot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.*;
 
 public class Movements implements TelemetryProvider {
-
     Robot robot;
 
     private boolean isFileDump;
 
+    // Constants
+    private final static double DISTANCE_THRESHOLD = 0.5;
+    private final static double ANGLE_THRESHOLD = Math.toRadians(2);
+    private final static double FOLLOW_RADIUS = 15;
+    private final static double SLIP_FACTOR = 0;
+
+    // Helper variables for calculation
     Point clippedPoint;
     Point targetPoint;
     Point adjustedTargetPoint;
-
-
-    // constants
-    private final double distanceThreshold = 0.5;
-    private final double angleThreshold = Math.toRadians(2);
-    private final double followRadius = 15;
-    private final double slipFactor = 0;
 
     public int currentTrip;
 
@@ -52,10 +49,9 @@ public class Movements implements TelemetryProvider {
     /**
      * The index of the point that the robot is currently following in the path.
      */
-    private int pathIndex = 0;
+    private int pathIndex;
 
     public void pathFollow(ArrayList<Waypoint> path, double direction, double moveSpeed, double turnSpeed, boolean willAngleLock, double angleLockHeading) {
-
         pathIndex = 0; // Reset pathIndex
         this.direction = direction;
         this.willAngleLock = willAngleLock;
@@ -140,7 +136,7 @@ public class Movements implements TelemetryProvider {
             Point start = path.get(i).toPoint();
             Point end = path.get(i + 1).toPoint();
 
-            ArrayList<Point> intersections = lineCircleIntersection(center, followRadius, start, end);
+            ArrayList<Point> intersections = lineCircleIntersection(center, FOLLOW_RADIUS, start, end);
 
             double nearestAngle = Double.MAX_VALUE;
 
@@ -158,7 +154,7 @@ public class Movements implements TelemetryProvider {
             }
         }
 
-        if (Math.hypot(center.x - path.get(path.size() - 1).x, center.y - path.get(path.size() - 1).y) < followRadius * 1.5 && pathIndex == path.size() - 2) {
+        if (Math.hypot(center.x - path.get(path.size() - 1).x, center.y - path.get(path.size() - 1).y) < FOLLOW_RADIUS * 1.5 && pathIndex == path.size() - 2) {
             followPoint = path.get(path.size() - 1).toPoint();
             isTargetingLastPoint = true;
         }
@@ -167,8 +163,8 @@ public class Movements implements TelemetryProvider {
     }
 
     private Point adjustTargetPoint(Point targetPoint) {
-        double robotSlipX = slipFactor * robot.velocityModule.xVel;
-        double robotSlipY = slipFactor * robot.velocityModule.yVel;
+        double robotSlipX = SLIP_FACTOR * robot.velocityModule.xVel;
+        double robotSlipY = SLIP_FACTOR * robot.velocityModule.yVel;
 
         double slipX = robotSlipX * Math.cos(robot.odometryModule.worldAngleRad) + robotSlipY * Math.sin(robot.odometryModule.worldAngleRad);
         double slipY = robotSlipY * Math.cos(robot.odometryModule.worldAngleRad) - robotSlipX * Math.sin(robot.odometryModule.worldAngleRad);
@@ -198,15 +194,15 @@ public class Movements implements TelemetryProvider {
         robot.drivetrainModule.turnMovement = Range.clip(relativeTurnAngle / Math.toRadians(30), -1, 1) * turnSpeed;
 
         if (isTargetingLastPoint) {
-            robot.drivetrainModule.xMovement *= Range.clip(distanceToTarget / followRadius, 0.2, 1);
-            robot.drivetrainModule.yMovement *= Range.clip(distanceToTarget / followRadius, 0.2, 1);
+            robot.drivetrainModule.xMovement *= Range.clip(distanceToTarget / FOLLOW_RADIUS, 0.2, 1);
+            robot.drivetrainModule.yMovement *= Range.clip(distanceToTarget / FOLLOW_RADIUS, 0.2, 1);
         }
     }
 
     private boolean isDone(ArrayList<Waypoint> path, Point center, double heading) {
         Point endPoint = path.get(path.size() - 1).toPoint();
 
-        return (Math.hypot(center.x - endPoint.x, center.y - endPoint.y) < distanceThreshold) && (!willAngleLock || Math.abs(angleWrap2(angleLockHeading - heading)) < angleThreshold) && pathIndex == path.size() - 2;
+        return (Math.hypot(center.x - endPoint.x, center.y - endPoint.y) < DISTANCE_THRESHOLD) && (!willAngleLock || Math.abs(angleWrap2(angleLockHeading - heading)) < ANGLE_THRESHOLD) && pathIndex == path.size() - 2;
     }
 
     public boolean isFileDump() {

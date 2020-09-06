@@ -19,7 +19,6 @@ import org.firstinspires.ftc.teamcode.rework.RobotTools.TelemetryDump;
 
 public class Robot {
     // All modules in the robot (remember to update initModules() and updateModules() when adding)
-
     public DrivetrainModule drivetrainModule;
     public OdometryModule odometryModule;
     public VelocityModule velocityModule;
