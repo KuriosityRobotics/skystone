@@ -20,14 +20,14 @@ public class PathPIDTest extends LinearOpMode {
         ArrayList<Waypoint> path = new ArrayList<Waypoint>();
         path.add(new Waypoint(0, 0));
         path.add(new Waypoint(0, 30));
+        robot.startModules();
 
         waitForStart();
-        robot.startModules();
 
         while (opModeIsActive()) {
 
             robot.movements.pathFollow(path, 0, 0.8, 0.8, true, Math.PI*-0.5);
-
+            robot.telemetryDump.addData("Status: ","finished");
             break;
         }
     }

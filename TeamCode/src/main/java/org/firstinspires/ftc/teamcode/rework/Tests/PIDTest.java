@@ -15,8 +15,9 @@ public class PIDTest extends LinearOpMode {
     public void runOpMode() {
         initRobot();
         PIDController pidController = new PIDController(0.01,0.0000001,0,robot);
-        waitForStart();
         robot.startModules();
+
+        waitForStart();
 
         while (opModeIsActive()) {
             telemetryUpdateTime();

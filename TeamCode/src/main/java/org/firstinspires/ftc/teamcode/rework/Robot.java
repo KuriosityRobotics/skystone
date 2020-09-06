@@ -38,6 +38,7 @@ public class Robot {
 
     // New thread that updates modules
     ModuleExecutor moduleExecutor;
+    AsyncThread asyncThread;
 
     // Array that all modules will be loaded into for easier access
     private Module[] modules;
@@ -67,10 +68,14 @@ public class Robot {
 
         for(Module module : modules) {
             if(module.isOn()) {
-                module.update();
-                module.telemetry();
-                if(WILL_FILE_DUMP) {
-                    module.fileDump();
+                try {
+                    module.update();
+                    module.telemetry();
+                    if (WILL_FILE_DUMP) {
+                        module.fileDump();
+                    }
+                }catch (Exception e){
+
                 }
             }
         }
@@ -84,7 +89,7 @@ public class Robot {
         movements = new Movements(this, true);
 
         this.modules = new Module[] {
-                this.drivetrainModule, this.odometryModule, this.velocityModule
+                this.odometryModule,this.drivetrainModule,this.velocityModule
         };
 
         // Initialize modules
@@ -94,6 +99,7 @@ public class Robot {
 
         // Start the thread for executing modules.
         moduleExecutor = new ModuleExecutor(this, telemetry);
+        //asyncThread = new AsyncThread(this);
     }
 
     /**
@@ -101,6 +107,7 @@ public class Robot {
      */
     public void startModules() {
         moduleExecutor.start();
+        //asyncThread.execute();
     }
 
     private void initHubs() {

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.rework.Modules;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.Module;
@@ -56,14 +58,14 @@ public class OdometryModule implements Module {
         calculateRobotPosition();
     }
 
-    public void telemetry() {
+    public synchronized void telemetry() {
         robot.telemetryDump.addHeader("---ODOMETRY---");
         robot.telemetryDump.addData("x: ", worldX);
         robot.telemetryDump.addData("y: ", worldY);
         robot.telemetryDump.addData("heading: ", Math.toDegrees(worldAngleRad));
     }
 
-    public void fileDump(){
+    public synchronized void fileDump(){
         robot.fileDump.setHeader(concat(robot.movements.currentTrip,"_odometry.txt"),"x y h");
         robot.fileDump.addData(concat(robot.movements.currentTrip,"_odometry.txt"), concat(worldX, " ",worldY, " ", Math.toDegrees(worldAngleRad)));
     }

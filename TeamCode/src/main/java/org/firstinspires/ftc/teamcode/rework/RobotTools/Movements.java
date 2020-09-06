@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.rework.RobotTools;
 
+import android.os.SystemClock;
+
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions;
@@ -200,8 +202,8 @@ public class Movements {
         robot.drivetrainModule.turnMovement = Range.clip(relativeTurnAngle / Math.toRadians(30), -1, 1) * turnSpeed;
 
         if (isTargetingLastPoint){
-            robot.drivetrainModule.xMovement *= Range.clip(distanceToTarget / followRadius, 0.2, 1);
-            robot.drivetrainModule.yMovement *= Range.clip(distanceToTarget / followRadius, 0.2, 1);
+            robot.drivetrainModule.xMovement *= Range.clip(distanceToTarget / followRadius, 0.35, 1);
+            robot.drivetrainModule.yMovement *= Range.clip(distanceToTarget / followRadius, 0.35, 1);
         }
     }
 
