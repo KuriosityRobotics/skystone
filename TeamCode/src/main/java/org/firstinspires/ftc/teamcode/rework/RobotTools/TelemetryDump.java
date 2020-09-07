@@ -27,7 +27,9 @@ public class TelemetryDump {
     public void update() {
         StringBuilder out = new StringBuilder();
         for(TelemetryProvider provider : providers) {
+
             out.append("---").append(provider.getClass().getSimpleName()).append("---\n");
+
             for(String entry : provider.getTelemetryData()) {
                 out.append(entry).append("\n");
             }
