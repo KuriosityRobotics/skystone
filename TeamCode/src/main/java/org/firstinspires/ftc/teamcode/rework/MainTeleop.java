@@ -85,6 +85,16 @@ public class MainTeleop extends LinearOpMode implements TelemetryProvider {
             turnMovement *= SLOW_MODE_SCALE_FACTOR;
         }
 
+        if (gamepad2.right_bumper){
+            if (robot.armModule.canSetState()){
+                robot.armModule.setState(1);
+            }
+        } else if (gamepad2.left_bumper){
+            if (robot.armModule.canSetState()){
+                robot.armModule.setState(0);
+            }
+        }
+
         robot.drivetrainModule.yMovement = yMovement;
         robot.drivetrainModule.xMovement = xMovement;
         robot.drivetrainModule.turnMovement = turnMovement;

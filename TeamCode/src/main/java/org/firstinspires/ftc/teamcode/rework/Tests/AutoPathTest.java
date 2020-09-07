@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.rework.AutoTools.Waypoint;
 import org.firstinspires.ftc.teamcode.rework.Robot;
+import org.firstinspires.ftc.teamcode.rework.RobotTools.Action;
 import org.firstinspires.ftc.teamcode.rework.RobotTools.PathFollow;
 
 import java.util.ArrayList;
@@ -23,15 +24,15 @@ public class AutoPathTest extends LinearOpMode {
         robot.initModules();
 
         pf1 = new PathFollow( new Waypoint[]{
-                        new Waypoint(0,0),
+                        new Waypoint(0,0, new Action[]{new Action(0,1), new Action(0,0)}),
                         new Waypoint(24,24),
                         new Waypoint(24,48)
                 }, robot, "test1"
         );
 
         pf2 = new PathFollow( new Waypoint[]{
-                        new Waypoint(24,48),
-                        new Waypoint(24,24),
+                        new Waypoint(24,48, new Action[]{new Action(0,1)}),
+                        new Waypoint(24,24, new Action[]{new Action(0,0), new Action(0,1)}),
                         new Waypoint(0,0)
                 }, robot, "test2"
         );

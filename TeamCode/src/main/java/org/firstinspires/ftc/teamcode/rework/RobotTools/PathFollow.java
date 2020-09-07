@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.rework.RobotTools;
 
 import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions;
 import org.firstinspires.ftc.teamcode.rework.AutoTools.Point;
 import org.firstinspires.ftc.teamcode.rework.AutoTools.Waypoint;
@@ -59,6 +60,8 @@ public class PathFollow implements TelemetryProvider {
             clippedPoint = clipToPath(path, robotPoint);
             targetPoint = findTarget(path, clippedPoint, robotHeading);
             adjustedTargetPoint = adjustTargetPoint(targetPoint);
+
+            dealWithActions();
 
             setMovementsToTarget(adjustedTargetPoint, moveSpeed, turnSpeed);
 
@@ -185,10 +188,41 @@ public class PathFollow implements TelemetryProvider {
         }
     }
 
+    private void dealWithActions() {
+        for (int i = 0; i < pathIndex+1; i++){
+            Action[] thisActionSet = path[i].actionSet;
+
+            for (Action thisAction : thisActionSet){
+                if (!thisAction.queued){
+                    if (robot.stateModules[thisAction.moduleNumber].canSetState()){
+                        robot.stateModules[thisAction.moduleNumber].setState(thisAction.stateNumber);
+                        thisAction.queued = true;
+                    }
+                }
+            }
+        }
+    }
+
     private boolean isDone(Waypoint[] path, Point center, double heading) {
         Point endPoint = path[path.length - 1].toPoint();
 
-        return (Math.hypot(center.x - endPoint.x, center.y - endPoint.y) < distanceThreshold) && (!willAngleLock || Math.abs(angleWrap2(angleLockHeading - heading)) < angleThreshold) && pathIndex == path.length - 2;
+        return
+                (Math.hypot(center.x - endPoint.x, center.y - endPoint.y) < distanceThreshold)
+                && (!willAngleLock || Math.abs(angleWrap2(angleLockHeading - heading)) < angleThreshold)
+                && pathIndex == path.length - 2
+                && queuedAllActions(path);
+    }
+
+    private boolean queuedAllActions(Waypoint[] path){
+        for (int i = 0; i < path.length; i++){
+            Action[] thisActionSet = path[i].actionSet;
+            for (Action action : thisActionSet){
+                if (!action.queued){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public boolean isFileDump() {

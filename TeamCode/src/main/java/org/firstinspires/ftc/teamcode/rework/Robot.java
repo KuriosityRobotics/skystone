@@ -10,8 +10,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.rework.ModuleTools.StateModule;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.Module;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.ModuleExecutor;
+import org.firstinspires.ftc.teamcode.rework.Modules.ArmModule;
 import org.firstinspires.ftc.teamcode.rework.Modules.OdometryModule;
 import org.firstinspires.ftc.teamcode.rework.Modules.DrivetrainModule;
 import org.firstinspires.ftc.teamcode.rework.Modules.VelocityModule;
@@ -23,6 +25,7 @@ public class Robot {
     public DrivetrainModule drivetrainModule;
     public OdometryModule odometryModule;
     public VelocityModule velocityModule;
+    public ArmModule armModule;
 
     public long currentTimeMilli;
 
@@ -37,7 +40,8 @@ public class Robot {
     ModuleExecutor moduleExecutor;
 
     // Array that all modules will be loaded into for easier access
-    private Module[] modules;
+    public Module[] modules;
+    public StateModule[] stateModules;
 
     // REV Hubs
     private LynxModule revHub1;
@@ -74,6 +78,19 @@ public class Robot {
                 }
             }
         }
+
+        for(StateModule module : stateModules) {
+            if(module.isOn()) {
+                try {
+                    module.update();
+                }catch (Exception e){
+                    Log.d("Module", "Module couldn't update");
+                }
+                if(WILL_FILE_DUMP) {
+                    module.fileDump();
+                }
+            }
+        }
     }
 
     public void initModules() {
@@ -82,13 +99,23 @@ public class Robot {
         this.odometryModule = new OdometryModule(this,true);
         this.velocityModule = new VelocityModule(this,true);
 
+        this.armModule = new ArmModule(this, true);
+
         this.modules = new Module[] {
                 this.drivetrainModule, this.odometryModule, this.velocityModule
+        };
+
+        this.stateModules = new StateModule[]{
+                this.armModule
         };
 
         // Initialize modules
         for(Module module : modules) {
             module.init();
+        }
+
+        for(StateModule stateModule : stateModules) {
+            stateModule.init();
         }
 
         // Start the thread for executing modules.

@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 @Disabled
+@Deprecated
 @TeleOp(name = "MainTeleOpSky2", group = "Linear Opmode")
 public class MainTeleop extends LinearOpMode {
     Robot robot;
