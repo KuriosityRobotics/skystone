@@ -6,6 +6,7 @@ package org.firstinspires.ftc.teamcode.rework.RobotTools;
  */
 public class ToggleButton {
     private boolean toggle = false;
+    private boolean pressed = false;
 
     /**
      * Determines if a button has been toggled, by keeping track of whether or not the button
@@ -15,14 +16,25 @@ public class ToggleButton {
      * @return true on toggle, false if not.
      */
     public boolean isToggled(boolean buttonInput) {
+
         if (!toggle && buttonInput) {
             toggle = true;
-            return true;
         } else if (toggle && !buttonInput) {
             toggle = false;
         }
 
-        return false;
+        return toggle;
+    }
+
+    public boolean isPressed(boolean buttonInput) {
+
+        if (!pressed && buttonInput) {
+            pressed = true;
+        } else {
+            pressed = false;
+        }
+
+        return pressed;
     }
 
     /**

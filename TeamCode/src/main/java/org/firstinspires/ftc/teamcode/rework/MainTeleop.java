@@ -4,12 +4,12 @@ import android.os.SystemClock;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.rework.ActionTools.Action;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.TelemetryProvider;
-import org.firstinspires.ftc.teamcode.rework.RobotTools.TelemetryDump;
+import org.firstinspires.ftc.teamcode.rework.RobotTools.ToggleButton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 @TeleOp
 public class MainTeleop extends LinearOpMode implements TelemetryProvider {
@@ -21,6 +21,9 @@ public class MainTeleop extends LinearOpMode implements TelemetryProvider {
     private boolean lastArrowMoveState = false;
     private double arrowMoveAngle = 0;
 
+    ToggleButton rb = new ToggleButton();
+    ToggleButton lb = new ToggleButton();
+
     public void runOpMode() {
         initRobot();
         robot.telemetryDump.registerProvider(this);
@@ -29,6 +32,13 @@ public class MainTeleop extends LinearOpMode implements TelemetryProvider {
 
         while (opModeIsActive()) {
             updateDrivetrainStates();
+
+            if(rb.isPressed(gamepad2.right_bumper)){
+                robot.actionQueueModule.registerAction(new Action(0,0));
+            } else if (lb.isPressed(gamepad2.left_bumper)){
+                robot.actionQueueModule.registerAction(new Action(0,1));
+            }
+
             lastUpdateTime = SystemClock.elapsedRealtime();
         }
     }
@@ -83,16 +93,6 @@ public class MainTeleop extends LinearOpMode implements TelemetryProvider {
             xMovement *= SLOW_MODE_SCALE_FACTOR;
             yMovement *= SLOW_MODE_SCALE_FACTOR;
             turnMovement *= SLOW_MODE_SCALE_FACTOR;
-        }
-
-        if (gamepad2.right_bumper){
-            if (robot.armModule.canSetState()){
-                robot.armModule.setState(1);
-            }
-        } else if (gamepad2.left_bumper){
-            if (robot.armModule.canSetState()){
-                robot.armModule.setState(0);
-            }
         }
 
         robot.drivetrainModule.yMovement = yMovement;

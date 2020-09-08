@@ -2,9 +2,10 @@ package org.firstinspires.ftc.teamcode.rework.RobotTools;
 
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.rework.ActionTools.Action;
 import org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions;
 import org.firstinspires.ftc.teamcode.rework.AutoTools.Point;
-import org.firstinspires.ftc.teamcode.rework.AutoTools.Waypoint;
+import org.firstinspires.ftc.teamcode.rework.ActionTools.Waypoint;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.TelemetryProvider;
 import org.firstinspires.ftc.teamcode.rework.Robot;
 
@@ -61,7 +62,7 @@ public class PathFollow implements TelemetryProvider {
             targetPoint = findTarget(path, clippedPoint, robotHeading);
             adjustedTargetPoint = adjustTargetPoint(targetPoint);
 
-            dealWithActions();
+            queueActions();
 
             setMovementsToTarget(adjustedTargetPoint, moveSpeed, turnSpeed);
 
@@ -188,16 +189,22 @@ public class PathFollow implements TelemetryProvider {
         }
     }
 
-    private void dealWithActions() {
+    private void queueActions() {
+
+        // for every path index it should do
         for (int i = 0; i < pathIndex+1; i++){
+
+            // get this action set
             Action[] thisActionSet = path[i].actionSet;
 
+            // for every action
+            // if it has not been queued
+            // then queue it
+            // and mark it as queued
             for (Action thisAction : thisActionSet){
                 if (!thisAction.queued){
-                    if (robot.stateModules[thisAction.moduleNumber].canSetState()){
-                        robot.stateModules[thisAction.moduleNumber].setState(thisAction.stateNumber);
-                        thisAction.queued = true;
-                    }
+                    robot.actionQueueModule.registerAction(thisAction);
+                    thisAction.queued = true;
                 }
             }
         }

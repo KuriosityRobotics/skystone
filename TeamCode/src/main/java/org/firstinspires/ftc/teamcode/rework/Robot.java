@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.rework.Modules.ActionQueueModule;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.StateModule;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.Module;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.ModuleExecutor;
@@ -25,6 +26,7 @@ public class Robot {
     public DrivetrainModule drivetrainModule;
     public OdometryModule odometryModule;
     public VelocityModule velocityModule;
+    public ActionQueueModule actionQueueModule;
     public ArmModule armModule;
 
     public long currentTimeMilli;
@@ -35,6 +37,8 @@ public class Robot {
 
     public TelemetryDump telemetryDump;
     public FileDump fileDump;
+
+
 
     // New thread that updates modules
     ModuleExecutor moduleExecutor;
@@ -98,11 +102,12 @@ public class Robot {
         this.drivetrainModule = new DrivetrainModule(this,true);
         this.odometryModule = new OdometryModule(this,true);
         this.velocityModule = new VelocityModule(this,true);
+        this.actionQueueModule = new ActionQueueModule(this, true);
 
         this.armModule = new ArmModule(this, true);
 
         this.modules = new Module[] {
-                this.drivetrainModule, this.odometryModule, this.velocityModule
+                this.drivetrainModule, this.odometryModule, this.velocityModule, this.actionQueueModule
         };
 
         this.stateModules = new StateModule[]{

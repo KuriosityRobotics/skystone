@@ -3,12 +3,10 @@ package org.firstinspires.ftc.teamcode.rework.Tests;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.rework.AutoTools.Waypoint;
+import org.firstinspires.ftc.teamcode.rework.ActionTools.Waypoint;
 import org.firstinspires.ftc.teamcode.rework.Robot;
-import org.firstinspires.ftc.teamcode.rework.RobotTools.Action;
+import org.firstinspires.ftc.teamcode.rework.ActionTools.Action;
 import org.firstinspires.ftc.teamcode.rework.RobotTools.PathFollow;
-
-import java.util.ArrayList;
 
 @Autonomous
 public class AutoPathTest extends LinearOpMode {

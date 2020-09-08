@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.rework.ModuleTools.StateModule;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.TelemetryProvider;
 import org.firstinspires.ftc.teamcode.rework.Robot;
 import org.firstinspires.ftc.teamcode.rework.RobotTools.OptimizedServo;
-import org.firstinspires.ftc.teamcode.rework.RobotTools.SubAction;
+import org.firstinspires.ftc.teamcode.rework.ActionTools.SubAction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,17 +39,21 @@ public class ArmModule implements StateModule, TelemetryProvider {
 
         // reset to 0 when init
         setState(0);
-        while (!canSetState && robot.isOpModeActive()){
+        while (!canSetState){
             update();
         }
     }
 
     @Override
     public synchronized void update() {
-        // in other words if it is currently changing states
+
+        // if it is currently changing states
+        // then do it
         if (!canSetState){
             long elapsedTime = SystemClock.elapsedRealtime() - stateChangeStartTime;
             SubAction[] directions = subActions.get(state);
+
+            // execute the sub actions for changing the state
             for (int i = 0; i < directions.length; i++){
                 SubAction thisSubAction = directions[i];
 
@@ -87,6 +91,7 @@ public class ArmModule implements StateModule, TelemetryProvider {
     @Override
     public void setState(int state) {
 
+        // if the state its trying to set to is the same don't set it
         if (this.state == state){
             return;
         }

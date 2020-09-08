@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode.rework.RobotTools;
+package org.firstinspires.ftc.teamcode.rework.ActionTools;
+
+import org.firstinspires.ftc.teamcode.rework.RobotTools.Hardware;
 
 public class SubAction {
 

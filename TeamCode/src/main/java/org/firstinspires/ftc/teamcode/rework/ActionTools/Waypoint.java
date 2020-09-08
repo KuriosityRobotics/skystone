@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.rework.AutoTools;
+package org.firstinspires.ftc.teamcode.rework.ActionTools;
 
-import org.firstinspires.ftc.teamcode.rework.RobotTools.Action;
+import org.firstinspires.ftc.teamcode.rework.AutoTools.Point;
 
 public class Waypoint extends Point {
 

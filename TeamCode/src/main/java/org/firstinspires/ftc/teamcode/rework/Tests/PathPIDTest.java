@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.rework.Tests;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.rework.AutoTools.Waypoint;
+import org.firstinspires.ftc.teamcode.rework.ActionTools.Waypoint;
 import org.firstinspires.ftc.teamcode.rework.Robot;
 
 import java.util.ArrayList;
