@@ -1,14 +1,18 @@
 package org.firstinspires.ftc.teamcode.rework.StateMachines;
 
+import android.os.SystemClock;
 import android.util.Log;
 
-public class FSM {
+import org.firstinspires.ftc.teamcode.rework.ModuleTools.TelemetryProvider;
 
+import java.util.ArrayList;
 
-    String[] states;
-    String[] transitions;
-    public String[][] stateTable;
-    String currentState;
+public class FSM implements TelemetryProvider {
+
+    private String[] states;
+    private String[] transitions;
+    private String[][] stateTable;
+    private String currentState;
 
     public FSM(String[] states, String[] transitions, String[][] stateTable, String currentState) {
         this.states = states;
@@ -53,5 +57,12 @@ public class FSM {
             }
         }
         return -1;
+    }
+
+    @Override
+    public ArrayList<String> getTelemetryData() {
+        ArrayList<String> data = new ArrayList<>();
+        data.add("current state: " + currentState);
+        return data;
     }
 }
