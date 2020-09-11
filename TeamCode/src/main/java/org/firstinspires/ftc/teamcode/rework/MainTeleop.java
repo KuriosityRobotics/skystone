@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.rework.ActionTools.Action;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.TelemetryProvider;
-import org.firstinspires.ftc.teamcode.rework.RobotTools.ToggleButton;
 
 import java.util.ArrayList;
 
@@ -21,9 +20,6 @@ public class MainTeleop extends LinearOpMode implements TelemetryProvider {
     private boolean lastArrowMoveState = false;
     private double arrowMoveAngle = 0;
 
-    ToggleButton rb = new ToggleButton();
-    ToggleButton lb = new ToggleButton();
-
     public void runOpMode() {
         initRobot();
         robot.telemetryDump.registerProvider(this);
@@ -33,10 +29,16 @@ public class MainTeleop extends LinearOpMode implements TelemetryProvider {
         while (opModeIsActive()) {
             updateDrivetrainStates();
 
-            if(rb.isPressed(gamepad2.right_bumper)){
-                robot.actionQueueModule.registerAction(new Action(0,0));
-            } else if (lb.isPressed(gamepad2.left_bumper)){
-                robot.actionQueueModule.registerAction(new Action(0,1));
+            if(gamepad2.left_bumper){
+                if(robot.stateModules[0].canSetState()){
+                    robot.actionQueueModule.registerAction(new Action(0,0));
+                }
+            }
+
+            if (gamepad2.right_bumper){
+                if(robot.stateModules[0].canSetState()){
+                    robot.actionQueueModule.registerAction(new Action(0,1));
+                }
             }
 
             lastUpdateTime = SystemClock.elapsedRealtime();
