@@ -2,13 +2,10 @@ package org.firstinspires.ftc.teamcode.rework.Modules;
 
 import android.os.SystemClock;
 
-import org.firstinspires.ftc.teamcode.rework.ModuleTools.Module;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.TelemetryProvider;
 import org.firstinspires.ftc.teamcode.rework.Robot;
-import org.firstinspires.ftc.teamcode.rework.RobotTools.TelemetryDump;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class VelocityModule implements Module, TelemetryProvider {
     private boolean isOn;
@@ -29,7 +26,7 @@ public class VelocityModule implements Module, TelemetryProvider {
     private Robot robot;
 
     public VelocityModule(Robot robot, boolean isOn) {
-        TelemetryDump.registerProvider(this);
+        robot.telemetryDump.registerProvider(this);
         this.robot = robot;
         this.isOn = isOn;
     }
@@ -53,9 +50,9 @@ public class VelocityModule implements Module, TelemetryProvider {
 
     public ArrayList<String> getTelemetryData() {
         ArrayList<String> data = new ArrayList<>();
-        data.add("xVel: " + String.valueOf(xVel));
-        data.add("yVel: " + String.valueOf(yVel));
-        data.add("angleVel: "+ String.valueOf(angleVel));
+        data.add("xVel: " + xVel);
+        data.add("yVel: " + yVel);
+        data.add("angleVel: "+ angleVel);
         return data;
     }
 

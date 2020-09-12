@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.rework.Tests;
+package org.firstinspires.ftc.teamcode.rework.TestOpModes;
 
 import android.os.SystemClock;
 
@@ -20,7 +20,7 @@ public class PIDTest extends LinearOpMode implements TelemetryProvider {
     long lastUpdateTime;
 
     public void runOpMode() {
-        TelemetryDump.registerProvider(this);
+        robot.telemetryDump.registerProvider(this);
         initRobot();
         PIDController pidController = new PIDController(0.01,0.0000001,0,robot);
         waitForStart();

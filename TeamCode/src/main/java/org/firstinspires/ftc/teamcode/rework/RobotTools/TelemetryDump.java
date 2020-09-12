@@ -10,26 +10,28 @@ import java.util.Map;
 
 public class TelemetryDump {
     Telemetry telemetry;
-    private static ArrayList<TelemetryProvider> providers;
+    private ArrayList<TelemetryProvider> providers;
 
     public TelemetryDump(Telemetry telemetry) {
         this.telemetry = telemetry;
         this.providers = new ArrayList<>();
     }
 
-    public static void registerProvider(TelemetryProvider provider) {
+    public void registerProvider(TelemetryProvider provider) {
         providers.add(provider);
     }
-    public static void removeProvider(TelemetryProvider provider) {
+    public void removeProvider(TelemetryProvider provider) {
         providers.remove(provider);
     }
 
     public void update() {
         StringBuilder out = new StringBuilder();
         for(TelemetryProvider provider : providers) {
-            out.append("---" + provider.getClass().getName() + "---\n");
+
+            out.append("---").append(provider.getClass().getSimpleName()).append("---\n");
+
             for(String entry : provider.getTelemetryData()) {
-                out.append(entry + "\n");
+                out.append(entry).append("\n");
             }
         }
         telemetry.addLine(out.toString());
