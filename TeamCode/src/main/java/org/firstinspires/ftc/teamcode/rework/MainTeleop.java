@@ -39,7 +39,6 @@ public class MainTeleop extends LinearOpMode implements TelemetryProvider {
     }
 
     private void updateDrivetrainStates() {
-
         double yMovement = 0;
         double xMovement = 0;
         double turnMovement = 0;
@@ -88,7 +87,6 @@ public class MainTeleop extends LinearOpMode implements TelemetryProvider {
         robot.drivetrainModule.yMovement = yMovement;
         robot.drivetrainModule.xMovement = xMovement;
         robot.drivetrainModule.turnMovement = turnMovement;
-
     }
 
     private boolean usingJoysticks(){

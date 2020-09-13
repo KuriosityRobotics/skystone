@@ -9,7 +9,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.rework.Modules.DrivetrainModule;
 import org.firstinspires.ftc.teamcode.rework.Modules.Module;
 import org.firstinspires.ftc.teamcode.rework.Modules.OdometryModule;
@@ -20,10 +23,14 @@ import org.firstinspires.ftc.teamcode.rework.RobotTools.TelemetryDump;
 
 public class Robot {
     // All modules in the robot (remember to update initModules() and updateModules() when adding)
-
     public DrivetrainModule drivetrainModule;
     public OdometryModule odometryModule;
     public VelocityModule velocityModule;
+
+    // Vuforia
+    public VuforiaLocalizer vuforia;
+    private final String VUFORIA_KEY = "AbSCRq//////AAAAGYEdTZut2U7TuZCfZGlOu7ZgOzsOlUVdiuQjgLBC9B3dNvrPE1x/REDktOALxt5jBEJJBAX4gM9ofcwMjCzaJKoZQBBlXXxrOscekzvrWkhqs/g+AtWJLkpCOOWKDLSixgH0bF7HByYv4h3fXECqRNGUUCHELf4Uoqea6tCtiGJvee+5K+5yqNfGduJBHcA1juE3kxGMdkqkbfSjfrNgWuolkjXR5z39tRChoOUN24HethAX8LiECiLhlKrJeC4BpdRCRazgJXGLvvI74Tmih9nhCz6zyVurHAHttlrXV17nYLyt6qQB1LtVEuSCkpfLJS8lZWS9ztfC1UEfrQ8m5zA6cYGQXjDMeRumdq9ugMkS";
+    WebcamName webcamName;
 
     public long currentTimeMilli;
 
@@ -54,6 +61,9 @@ public class Robot {
         this.telemetryDump = new TelemetryDump(telemetry);
         fileDump = new FileDump();
 
+
+        initVuforia();
+
         initHubs();
         initModules();
     }
@@ -67,7 +77,7 @@ public class Robot {
             if(module.isOn()) {
                 try {
                     module.update();
-                }catch (Exception e){
+                } catch (Exception e){
                     Log.d("Module", "Module couldn't update");
                 }
                 if(WILL_FILE_DUMP) {
@@ -94,6 +104,33 @@ public class Robot {
 
         // Start the thread for executing modules.
         moduleExecutor = new ModuleExecutor(this, telemetry);
+    }
+
+    /**
+     * Initializes vuforia for the robot
+     */
+    public void initVuforia() { // TODO: Ensure this works with new webcam setup
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        try {
+            webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+            int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+            VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+            parameters.vuforiaLicenseKey = VUFORIA_KEY;
+
+            parameters.cameraName = webcamName;
+            parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+
+            //  Instantiate the Vuforia engine
+            this.vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+            vuforia.enableConvertFrameToBitmap();
+        } catch (Exception e) {
+            throw new Error("Vuforia intialization failed. Exception: " + e);
+        }
     }
 
     /**
