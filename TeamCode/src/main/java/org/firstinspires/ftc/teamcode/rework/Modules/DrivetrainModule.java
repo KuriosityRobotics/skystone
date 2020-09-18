@@ -3,14 +3,10 @@ package org.firstinspires.ftc.teamcode.rework.Modules;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.rework.ModuleTools.Module;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.TelemetryProvider;
 import org.firstinspires.ftc.teamcode.rework.Robot;
-import org.firstinspires.ftc.teamcode.rework.RobotTools.TelemetryDump;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class DrivetrainModule implements Module, TelemetryProvider {
@@ -95,7 +91,7 @@ public class DrivetrainModule implements Module, TelemetryProvider {
 
         setMotorPowers(fLPower, fRPower, bLPower, bRPower);
     }
-    
+
 
     public void fileDump(){}
 
@@ -136,9 +132,9 @@ public class DrivetrainModule implements Module, TelemetryProvider {
     @Override
     public ArrayList<String> getTelemetryData() {
         ArrayList<String> data = new ArrayList<>();
-        data.add("xMovement: " + String.valueOf(xMovement));
-        data.add("yMovement: " + String.valueOf(yMovement));
-        data.add("turnMovement: " + String.valueOf(turnMovement));
+        data.add("xMovement: " + xMovement);
+        data.add("yMovement: " + yMovement);
+        data.add("turnMovement: " + turnMovement);
         return data;
     }
 }

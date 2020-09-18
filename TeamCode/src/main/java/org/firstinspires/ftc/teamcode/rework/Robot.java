@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.rework;
 
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -9,12 +10,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.rework.ModuleTools.Module;
-import org.firstinspires.ftc.teamcode.rework.ModuleTools.ModuleExecutor;
-import org.firstinspires.ftc.teamcode.rework.Modules.OdometryModule;
 import org.firstinspires.ftc.teamcode.rework.Modules.DrivetrainModule;
+import org.firstinspires.ftc.teamcode.rework.Modules.Module;
+import org.firstinspires.ftc.teamcode.rework.Modules.OdometryModule;
 import org.firstinspires.ftc.teamcode.rework.Modules.VelocityModule;
-import org.firstinspires.ftc.teamcode.rework.RobotTools.Movements;
+import org.firstinspires.ftc.teamcode.rework.RobotTools.FileDump;
+import org.firstinspires.ftc.teamcode.rework.RobotTools.ModuleExecutor;
 import org.firstinspires.ftc.teamcode.rework.RobotTools.TelemetryDump;
 
 public class Robot {
@@ -22,8 +23,6 @@ public class Robot {
     public DrivetrainModule drivetrainModule;
     public OdometryModule odometryModule;
     public VelocityModule velocityModule;
-
-    public Movements movements;
 
     public long currentTimeMilli;
 
@@ -44,7 +43,7 @@ public class Robot {
     private LynxModule revHub1;
     private LynxModule revHub2;
 
-    public final boolean WILL_FILE_DUMP = true;
+    public final boolean WILL_FILE_DUMP = false;
 
     public Robot(HardwareMap hardwareMap, Telemetry telemetry, LinearOpMode linearOpMode) {
         this.hardwareMap = hardwareMap;
@@ -65,12 +64,17 @@ public class Robot {
 
         for(Module module : modules) {
             if(module.isOn()) {
-                module.update();
+                try {
+                    module.update();
+                }catch (Exception e){
+                    Log.d("Module", "Module couldn't update");
+                }
                 if(WILL_FILE_DUMP) {
                     module.fileDump();
                 }
             }
         }
+        telemetryDump.update();
     }
 
     public void initModules() {
@@ -78,7 +82,6 @@ public class Robot {
         this.drivetrainModule = new DrivetrainModule(this,true);
         this.odometryModule = new OdometryModule(this,true);
         this.velocityModule = new VelocityModule(this,true);
-        movements = new Movements(this, true);
 
         this.modules = new Module[] {
                 this.drivetrainModule, this.odometryModule, this.velocityModule

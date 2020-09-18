@@ -14,5 +14,5 @@
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 dependencies {
-
+    testImplementation 'junit:junit:4.12'
 }

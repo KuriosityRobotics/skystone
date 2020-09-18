@@ -2,13 +2,12 @@ package org.firstinspires.ftc.teamcode.rework.Modules;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.rework.ModuleTools.Module;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.TelemetryProvider;
 import org.firstinspires.ftc.teamcode.rework.Robot;
-import org.firstinspires.ftc.teamcode.rework.RobotTools.TelemetryDump;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
+import static org.firstinspires.ftc.teamcode.rework.RobotTools.StringHelper.concat;
 
 public class OdometryModule implements Module, TelemetryProvider {
     private boolean isOn;
@@ -62,14 +61,14 @@ public class OdometryModule implements Module, TelemetryProvider {
 
     public ArrayList<String> getTelemetryData() {
         ArrayList<String> data = new ArrayList<>();
-        data.add("worldX: " + String.valueOf(worldX));
-        data.add("worldY: " + String.valueOf(worldY));
-        data.add("heading: " + String.valueOf(worldAngleRad));
+        data.add("worldX: " + worldX);
+        data.add("worldY: " + worldY);
+        data.add("heading: " + worldAngleRad);
         return data;
     }
 
     public void fileDump(){
-        robot.fileDump.addData(new StringBuilder().append(robot.movements.currentTrip).append("_odometry.txt").toString(), new StringBuilder().append(worldX).append(" ").append(worldY).toString());
+        robot.fileDump.addData(concat("1"," ","odometry.txt"), concat(worldX," ",worldY," ",worldAngleRad));
     }
 
     /**
