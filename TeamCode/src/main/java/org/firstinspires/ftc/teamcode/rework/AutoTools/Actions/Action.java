@@ -1,5 +1,13 @@
 package org.firstinspires.ftc.teamcode.rework.AutoTools.Actions;
 
-public enum Action {
-    SLOW_MODE, FULL_SPEED
+public class Action {
+    ActionType type;
+    ActionState state;
+
+    long beginExecutionTime;
+
+    public Action(ActionType type) {
+        this.type = type;
+        state = ActionState.PENDING_START;
+    }
 }

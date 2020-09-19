@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.rework.AutoTools.Actions;
 
+import android.os.SystemClock;
+
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.TelemetryProvider;
 import org.firstinspires.ftc.teamcode.rework.Robot;
 
@@ -22,16 +24,27 @@ public class ActionExecutor implements TelemetryProvider {
      */
     public void updateExecution() {
         for (Action action : executingActions) {
-            switch(action) {
+            long currentTime = SystemClock.elapsedRealtime();
+
+            if (action.state == ActionState.PENDING_START) {
+                action.beginExecutionTime = currentTime;
+                action.state = ActionState.EXECUTING;
+            }
+
+            switch(action.type) {
                 case SLOW_MODE:
                     drivetrainSlowMode(true);
 
-                    executingActions.remove(Action.SLOW_MODE);
+                    action.state = ActionState.COMPLETE;
+                    executingActions.remove(action);
+
                     break;
                 case FULL_SPEED:
                     drivetrainSlowMode(false);
 
-                    executingActions.remove(Action.FULL_SPEED);
+                    action.state = ActionState.COMPLETE;
+                    executingActions.remove(action);
+
                     break;
             }
         }
@@ -77,7 +90,7 @@ public class ActionExecutor implements TelemetryProvider {
         String executingActions = "Actions being executed: ";
 
         for (int i = 0; i < this.executingActions.size(); i++) {
-            executingActions = executingActions + this.executingActions.get(i).name();
+            executingActions = executingActions + this.executingActions.get(i).type.name();
 
             if (i != this.executingActions.size()) {
                 executingActions = executingActions + ", ";
