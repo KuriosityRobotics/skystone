@@ -35,15 +35,13 @@ public class ActionExecutor implements TelemetryProvider {
                 case SLOW_MODE:
                     drivetrainSlowMode(true);
 
-                    action.state = ActionState.COMPLETE;
-                    executingActions.remove(action);
+                    completeAction(action);
 
                     break;
                 case FULL_SPEED:
                     drivetrainSlowMode(false);
 
-                    action.state = ActionState.COMPLETE;
-                    executingActions.remove(action);
+                    completeAction(action);
 
                     break;
             }
@@ -73,6 +71,16 @@ public class ActionExecutor implements TelemetryProvider {
     public void registerAction(Action action) {
         // Register the action
         executingActions.add(action);
+    }
+
+    /**
+     * Marks an action as completed, removing it from the queue.
+     *
+     * @param action completed action
+     */
+    private void completeAction(Action action) {
+        action.state = ActionState.COMPLETE;
+        executingActions.remove(action);
     }
 
     /**
