@@ -11,13 +11,16 @@ public class ActionExecutor implements TelemetryProvider {
 
     public ActionExecutor(Robot robot) {
         robot.telemetryDump.registerProvider(this);
+
+        executingActions = new ArrayList<Action>();
+
         this.robot = robot;
     }
 
     /**
      * Update execution on all actions registered as currently executing.
      */
-    private void updateExecution() {
+    public void updateExecution() {
         for (Action action : executingActions) {
             switch(action) {
                 case SLOW_MODE:

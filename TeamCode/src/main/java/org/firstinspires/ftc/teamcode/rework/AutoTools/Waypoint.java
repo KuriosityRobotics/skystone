@@ -17,7 +17,7 @@ public class Waypoint extends Point {
         this.actions = actions;
     }
 
-    public void executeActions(ActionExecutor actionExecutor) {
+    public void registerActions(ActionExecutor actionExecutor) {
         actionExecutor.registerActions(actions);
     }
 

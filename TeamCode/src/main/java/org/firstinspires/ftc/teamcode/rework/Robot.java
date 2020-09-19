@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.rework.AutoTools.Actions.ActionExecutor;
 import org.firstinspires.ftc.teamcode.rework.Modules.DrivetrainModule;
 import org.firstinspires.ftc.teamcode.rework.Modules.Module;
 import org.firstinspires.ftc.teamcode.rework.Modules.OdometryModule;
@@ -23,6 +24,8 @@ public class Robot {
     public DrivetrainModule drivetrainModule;
     public OdometryModule odometryModule;
     public VelocityModule velocityModule;
+
+    public ActionExecutor actionExecutor;
 
     public long currentTimeMilli;
 
@@ -55,6 +58,8 @@ public class Robot {
 
         initHubs();
         initModules();
+
+        actionExecutor = new ActionExecutor(this);
     }
 
     public void update() {
