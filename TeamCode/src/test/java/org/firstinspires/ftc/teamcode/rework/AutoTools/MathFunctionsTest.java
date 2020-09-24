@@ -1,17 +1,11 @@
 package org.firstinspires.ftc.teamcode.rework.AutoTools;
 
+import org.firstinspires.ftc.teamcode.rework.util.auto.Point;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.ArrayList;
-
-import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.angleWrap;
-import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.closestPointOnLineToPoint;
-import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.lineSegmentCircleIntersection;
-import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.lineSegmentPointDistance;
-import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.solveQuadratic;
-import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.twoLineIntersectionPoint;
+import static org.firstinspires.ftc.teamcode.rework.util.auto.MathFunctions.*;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
