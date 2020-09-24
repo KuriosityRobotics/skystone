@@ -15,4 +15,6 @@
 apply from: '../build.common.gradle'
 dependencies {
     testImplementation 'junit:junit:4.12'
+    implementation 'org.openftc:easyopencv:1.4.1'
 }
+
