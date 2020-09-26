@@ -41,6 +41,7 @@ public class PathFollow implements TelemetryProvider {
     private boolean willAngleLock = false;
 
     public PathFollow(Waypoint[] path, Robot robot, String description) {
+        robot.telemetryDump.registerProvider(this);
         this.path = path;
         this.robot = robot;
         this.description = description;
@@ -96,14 +97,14 @@ public class PathFollow implements TelemetryProvider {
         int clippedIndex = pathIndex;
 
         // only checks the current line and the next line (no skipping)
-        for (int i = pathIndex; i < Math.min(path.length - 1, pathIndex + 2); i++) {
+        for (int i = Math.min(path.length - 2, pathIndex + 1); i >= pathIndex; i--){
             Point start = path[i].toPoint();
             Point end = path[i + 1].toPoint();
 
             double thisClipDist = linePointDistance(center, start, end);
 
             // if this clip distance is record low set the clip point to the clip point set the clippedIndex to index so later we can update the index we are at
-            if (thisClipDist < nearestClipDist) {
+            if (thisClipDist <= nearestClipDist) {
                 nearestClipDist = thisClipDist;
                 clipped = closestPointOnLineToPoint(center, start, end);
                 clippedIndex = i;

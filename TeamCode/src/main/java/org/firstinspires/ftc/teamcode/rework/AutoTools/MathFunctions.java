@@ -30,10 +30,35 @@ public class MathFunctions {
     }
 
     public static double linePointDistance(Point point, Point linePoint1, Point linePoint2) {
+
+        if (!pointWithinLine(point, linePoint1, linePoint2)){
+            return Math.min(dist(point, linePoint1), dist(point, linePoint2));
+        }
+
         double top = Math.abs((linePoint2.y - linePoint1.y) * point.x - (linePoint2.x - linePoint1.x) * point.y + linePoint2.x * linePoint1.y - linePoint2.y * linePoint1.x);
         double bottom = Math.hypot(linePoint2.y - linePoint1.y, linePoint2.x - linePoint1.x);
 
         return top / bottom;
+    }
+
+    public static boolean pointWithinLine(Point point, Point linePoint1, Point linePoint2){
+        if (Math.abs(linePoint1.y - linePoint2.y) < 0.003) {
+            linePoint1.y = linePoint2.y + 0.003;
+        }
+        if (Math.abs(linePoint1.x - linePoint2.x) < 0.003) {
+            linePoint1.x = linePoint2.x + 0.003;
+        }
+
+        Point closestPoint = closestPointOnLineToPoint(point, linePoint1, linePoint2);
+
+        double t1 = Math.atan2(point.y - linePoint1.y, point.x - linePoint1.x);
+        double t2 = Math.atan2(point.y - linePoint2.y, point.x - linePoint2.x);
+        double tL = Math.atan2(linePoint2.y - linePoint1.y, linePoint2.x - linePoint1.x);
+
+        double a1 = Math.abs(angleWrap(tL-t1));
+        double a2 = Math.abs(Math.PI - angleWrap(tL-t2));
+
+        return a1 <= Math.PI/2 && a2 <= Math.PI/2;
     }
 
     public static Point closestPointOnLineToPoint(Point point, Point linePoint1, Point linePoint2) {
@@ -113,5 +138,9 @@ public class MathFunctions {
             //if there are no roots
         }
         return allPoints;
+    }
+
+    public static double dist(Point a, Point b){
+        return Math.hypot(a.y - b.y, a.x - b.x);
     }
 }
