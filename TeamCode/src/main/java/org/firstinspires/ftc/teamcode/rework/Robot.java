@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.rework.Modules.DrivetrainModule;
 import org.firstinspires.ftc.teamcode.rework.Modules.Module;
 import org.firstinspires.ftc.teamcode.rework.Modules.OdometryModule;
+import org.firstinspires.ftc.teamcode.rework.Modules.ShooterModule;
 import org.firstinspires.ftc.teamcode.rework.Modules.VelocityModule;
 import org.firstinspires.ftc.teamcode.rework.RobotTools.FileDump;
 import org.firstinspires.ftc.teamcode.rework.RobotTools.ModuleExecutor;
@@ -27,6 +28,7 @@ public class Robot {
     public DrivetrainModule drivetrainModule;
     public OdometryModule odometryModule;
     public VelocityModule velocityModule;
+    public ShooterModule shooterModule;
 
     // Vuforia
     public VuforiaLocalizer vuforia;
@@ -97,9 +99,10 @@ public class Robot {
         this.drivetrainModule = new DrivetrainModule(this,true);
         this.odometryModule = new OdometryModule(this,true);
         this.velocityModule = new VelocityModule(this,true);
+        this.shooterModule = new ShooterModule(this, true);
 
         this.modules = new Module[] {
-                this.drivetrainModule, this.odometryModule, this.velocityModule
+                this.drivetrainModule, this.odometryModule, this.velocityModule, this.shooterModule
         };
 
         // Initialize modules

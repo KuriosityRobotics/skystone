@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.rework.Modules;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.rework.EnhancedHardware.EnhancedServo;
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.TelemetryProvider;
 import org.firstinspires.ftc.teamcode.rework.Robot;
 
@@ -13,14 +15,14 @@ public class ShooterModule implements Module, TelemetryProvider {
     boolean isOn;
 
     // States
-    double flyWheelSpeed;
-    double shooterFlapAngle; // Radians, relative to horizon.
-    int queuedFires; // Number of rings queued up to shoot.
+    public double flyWheelTargetSpeed;
+    public double shooterFlapAngle; // Radians, relative to horizon.
+    public int queuedFires; // Number of rings queued up to shoot.
 
     // Motors
-    private DcMotor leftFlyWheel;
-    private DcMotor rightFlyWheel;
-    private Servo shooterFlap;
+    private DcMotorEx leftFlyWheel;
+//    private DcMotorEx rightFlyWheel;
+    private EnhancedServo shooterFlap;
     private Servo indexerServo;
 
     public ShooterModule(Robot robot, boolean isOn) {
@@ -32,16 +34,24 @@ public class ShooterModule implements Module, TelemetryProvider {
     @Override
     public void init() {
         // TODO
-//        leftFlyWheel = robot.getDcMotor("leftFlyWheel");
-//        rightFlyWheel = robot.getDcMotor("rightFlyWheel");
-//        shooterFlap = robot.getServo("shooterFlap");
+        leftFlyWheel = (DcMotorEx) robot.getDcMotor("leftFlyWheel");
+//        rightFlyWheel = (DcMotorEx) robot.getDcMotor("rightFlyWheel");
+        shooterFlap = new EnhancedServo(robot.getServo("shooterFlap"), 0, 180); // In degrees
 //        indexerServo = robot.getServo("indexerServo");
+
+        leftFlyWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        rightFlyWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftFlyWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightFlyWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
     public void update() {
         // TODO
         // Ensure flywheel is up to speed, index and shoot if commanded to shoot.
+        leftFlyWheel.setVelocity(flyWheelTargetSpeed);
+        shooterFlap.setAngle(shooterFlapAngle);
     }
 
     @Override
