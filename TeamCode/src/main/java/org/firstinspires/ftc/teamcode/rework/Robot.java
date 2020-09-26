@@ -70,7 +70,7 @@ public class Robot {
         initHubs();
         initModules();
 
-        aimBot = new AimBot(odometryModule, vuforia);
+        aimBot = new AimBot(odometryModule, vuforia, this);
     }
 
     public void update() {

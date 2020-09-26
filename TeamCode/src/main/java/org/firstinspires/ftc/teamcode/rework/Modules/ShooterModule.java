@@ -4,10 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.rework.ModuleTools.TelemetryProvider;
-import org.firstinspires.ftc.teamcode.rework.Modules.Module;
 import org.firstinspires.ftc.teamcode.rework.Robot;
-import org.firstinspires.ftc.teamcode.rework.RobotTools.Shooter.AimBot;
-import org.firstinspires.ftc.teamcode.rework.RobotTools.Shooter.TowerGoal;
 
 import java.util.ArrayList;
 
@@ -17,11 +14,14 @@ public class ShooterModule implements Module, TelemetryProvider {
 
     // States
     double flyWheelSpeed;
-    boolean isShooterEngaged;
+    double shooterFlapAngle; // Radians, relative to horizon.
+    int queuedFires; // Number of rings queued up to shoot.
 
     // Motors
-    private DcMotor flyWheel;
-    private Servo shooterFlipServo;
+    private DcMotor leftFlyWheel;
+    private DcMotor rightFlyWheel;
+    private Servo shooterFlap;
+    private Servo indexerServo;
 
     public ShooterModule(Robot robot, boolean isOn) {
         robot.telemetryDump.registerProvider(this);
@@ -31,13 +31,17 @@ public class ShooterModule implements Module, TelemetryProvider {
 
     @Override
     public void init() {
-        flyWheel = robot.getDcMotor("flyWheel");
-        shooterFlipServo = robot.getServo("shooterFlipServo");
+        // TODO
+//        leftFlyWheel = robot.getDcMotor("leftFlyWheel");
+//        rightFlyWheel = robot.getDcMotor("rightFlyWheel");
+//        shooterFlap = robot.getServo("shooterFlap");
+//        indexerServo = robot.getServo("indexerServo");
     }
 
     @Override
     public void update() {
-        // Move towards position specified, shoot if there
+        // TODO
+        // Ensure flywheel is up to speed, index and shoot if commanded to shoot.
     }
 
     @Override
@@ -47,9 +51,10 @@ public class ShooterModule implements Module, TelemetryProvider {
 
     @Override
     public ArrayList<String> getTelemetryData() {
+        // TODO
         ArrayList<String> data = new ArrayList<>();
-        data.add("Flywheel speed: " + flyWheelSpeed);
-        data.add("Is engaged: " + isShooterEngaged);
+//        data.add("Flywheel speed: " + flyWheelSpeed);
+//        data.add("Will shoot: " + willShoot);
 
         return data;
     }
