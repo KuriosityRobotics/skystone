@@ -39,19 +39,19 @@ public class MathFunctionsTest {
     public void testLinePointDistance() {
         assertEquals(
                 0,
-                linePointDistance(new Point(0, 0), new Point(-1, 0), new Point(1, 0)),
+                lineSegmentPointDistance(new Point(0, 0), new Point(-1, 0), new Point(1, 0)),
                 0
         );
 
         assertEquals(
                 1,
-                linePointDistance(new Point(1, 0), new Point(2, 0), new Point(2, 1)),
+                lineSegmentPointDistance(new Point(1, 0), new Point(2, 0), new Point(2, 1)),
                 0
         );
 
         assertEquals(
                 Math.sqrt(8),
-                linePointDistance(new Point(2, 3), new Point(3, 0), new Point(5, 2)),
+                lineSegmentPointDistance(new Point(2, 3), new Point(3, 0), new Point(5, 2)),
                 1E-15
         );
 
