@@ -71,15 +71,14 @@ public class Robot {
             if(module.isOn()) {
                 try {
                     module.update();
-                }catch (Exception e){
-                    Log.d("Module", "Module couldn't update");
+                }catch (Exception e) {
+                    Log.d("Module", "Module couldn't update: " + module.getName());
                 }
-                if(WILL_FILE_DUMP) {
+                if (WILL_FILE_DUMP) {
                     module.fileDump();
                 }
             }
         }
-        telemetryDump.update();
     }
 
     public void initModules() {
@@ -98,7 +97,7 @@ public class Robot {
         }
 
         // Start the thread for executing modules.
-        moduleExecutor = new ModuleExecutor(this, telemetry);
+        moduleExecutor = new ModuleExecutor(this);
     }
 
     /**

@@ -109,4 +109,8 @@ public class ActionExecutor implements TelemetryProvider {
 
         return data;
     }
+
+    public String getName() {
+        return "ActionExecutor";
+    }
 }

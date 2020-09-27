@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.angleWrap;
 import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.closestPointOnLineToPoint;
-import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.linePointDistance;
+import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.lineSegmentPointDistance;
 import static org.firstinspires.ftc.teamcode.rework.AutoTools.MathFunctions.lineSegmentCircleIntersection;
 
 public class PathFollow implements TelemetryProvider {
@@ -17,16 +17,15 @@ public class PathFollow implements TelemetryProvider {
 
     private boolean isFileDump = false;
 
-    Point clippedPoint = new Point(0, 0);
-    Point targetPoint = new Point(0, 0);
+    Point clippedPoint = new Point(0,0);
+    Point targetPoint = new Point(0,0);
     Point adjustedTargetPoint;
 
     // constants
-    private final static double SEARCH_AHEAD_NUMBER_OF_PATHS = 1; // How many paths to search ahead (compared to the one being currently followed) while finding which to follow
-    private final static double DISTANCE_THRESHOLD = 0.5;
-    private final static double ANGLE_THRESHOLD = Math.toRadians(2);
-    private final static double FOLLOW_RADIUS = 15;
-    private final static double SLIP_FACTOR = 0;
+    private final double distanceThreshold = 0.5;
+    private final double angleThreshold = Math.toRadians(2);
+    private final double followRadius = 15;
+    private final double slipFactor = 0;
 
     // states
     private boolean isTargetingLastPoint = false;
@@ -46,8 +45,8 @@ public class PathFollow implements TelemetryProvider {
     }
 
     public void pathFollow(double direction, double moveSpeed, double turnSpeed, boolean willAngleLock, double angleLockHeading) {
-        pathIndex = 0; // Reset pathIndex
 
+        pathIndex = 0; // Reset pathIndex
         this.direction = direction;
         this.willAngleLock = willAngleLock;
         this.angleLockHeading = angleLockHeading;
@@ -63,15 +62,14 @@ public class PathFollow implements TelemetryProvider {
 
             setMovementsToTarget(adjustedTargetPoint, moveSpeed, turnSpeed);
 
+            robot.actionExecutor.updateExecution();
+
             if (isDone(path, robotPoint, robotHeading)) {
                 robot.drivetrainModule.xMovement = 0;
                 robot.drivetrainModule.yMovement = 0;
                 robot.drivetrainModule.turnMovement = 0;
                 return;
             }
-
-            // Update execution of all tasks
-            robot.actionExecutor.updateExecution();
         }
     }
 
@@ -90,35 +88,35 @@ public class PathFollow implements TelemetryProvider {
     }
 
     private Point clipToPath(Waypoint[] path, Point center) {
-        double nearestClipDistance = Double.MAX_VALUE;
-        int shortestClipDistanceIndex = pathIndex;
+        Point clipped = new Point();
+
+        double nearestClipDist = Double.MAX_VALUE;
+        int clippedIndex = pathIndex;
 
         // only checks the current line and the next line (no skipping)
-        for (int i = pathIndex; i < Math.min(path.length - 1, pathIndex + SEARCH_AHEAD_NUMBER_OF_PATHS); i++) {
-            Point thisPathStart = path[i].toPoint();
-            Point thisPathEnd = path[i + 1].toPoint();
+        for (int i = pathIndex; i < Math.min(path.length - 1, pathIndex + 2); i++) {
+            Point start = path[i].toPoint();
+            Point end = path[i + 1].toPoint();
 
-            double thisClipDist = linePointDistance(center, thisPathStart, thisPathEnd);
+            double thisClipDist = lineSegmentPointDistance(center, start, end);
 
-            // if this clip distance is record low set the clip point to the clip point set the shortestClipDistanceIndex to index so later we can update the index we are at
-            if (thisClipDist < nearestClipDistance) {
-                nearestClipDistance = thisClipDist;
-                shortestClipDistanceIndex = i;
+            // if this clip distance is record low set the clip point to the clip point set the clippedIndex to index so later we can update the index we are at
+            if (thisClipDist < nearestClipDist) {
+                nearestClipDist = thisClipDist;
+                clipped = closestPointOnLineToPoint(center, start, end);
+                clippedIndex = i;
             }
         }
 
-        if (shortestClipDistanceIndex != pathIndex) { // If we start following a new point
-            for (int passedPath = pathIndex; passedPath < shortestClipDistanceIndex; passedPath++) { // For every path we're no longer following
-                Waypoint passedPoint = path[passedPath + 1];
-
-                // Register actions as ready to execute
-                passedPoint.registerActions(robot.actionExecutor);
+        if (clippedIndex != pathIndex) {
+            for (int skippedIndex = pathIndex; skippedIndex <= clippedIndex; skippedIndex++) {
+                robot.actionExecutor.registerActions(path[skippedIndex].actions);
             }
         }
 
-        pathIndex = shortestClipDistanceIndex;
+        pathIndex = clippedIndex;
 
-        return closestPointOnLineToPoint(center, path[pathIndex].toPoint(), path[pathIndex + 1].toPoint());
+        return clipped;
     }
 
     private Point findTarget(Waypoint[] path, Point center, double heading) {
@@ -132,7 +130,7 @@ public class PathFollow implements TelemetryProvider {
             Point start = path[i].toPoint();
             Point end = path[i + 1].toPoint();
 
-            ArrayList<Point> intersections = lineSegmentCircleIntersection(center, FOLLOW_RADIUS, start, end);
+            ArrayList<Point> intersections = lineSegmentCircleIntersection(center, followRadius, start, end);
 
             double nearestAngle = Double.MAX_VALUE;
 
@@ -150,7 +148,7 @@ public class PathFollow implements TelemetryProvider {
             }
         }
 
-        if (Math.hypot(center.x - path[path.length - 1].x, center.y - path[path.length - 1].y) < FOLLOW_RADIUS * 1.5 && pathIndex == path.length - 2) {
+        if (Math.hypot(center.x - path[path.length - 1].x, center.y - path[path.length - 1].y) < followRadius * 1.5 && pathIndex == path.length - 2) {
             followPoint = path[path.length - 1].toPoint();
             isTargetingLastPoint = true;
         }
@@ -158,9 +156,9 @@ public class PathFollow implements TelemetryProvider {
         return followPoint;
     }
 
-    private Point adjustTargetPoint(Point targetPoint) {
-        double robotSlipX = SLIP_FACTOR * robot.velocityModule.xVel;
-        double robotSlipY = SLIP_FACTOR * robot.velocityModule.yVel;
+    private Point adjustTargetPoint(Point targetPoint){
+        double robotSlipX = slipFactor * robot.velocityModule.xVel;
+        double robotSlipY = slipFactor * robot.velocityModule.yVel;
 
         double slipX = robotSlipX * Math.cos(robot.odometryModule.worldAngleRad) + robotSlipY * Math.sin(robot.odometryModule.worldAngleRad);
         double slipY = robotSlipY * Math.cos(robot.odometryModule.worldAngleRad) - robotSlipX * Math.sin(robot.odometryModule.worldAngleRad);
@@ -177,7 +175,7 @@ public class PathFollow implements TelemetryProvider {
         double relativeYToPoint = Math.cos(relativeAngleToPoint) * distanceToTarget;
 
         double relativeTurnAngle = angleWrap(relativeAngleToPoint + direction);
-        if (willAngleLock && isTargetingLastPoint) {
+        if (willAngleLock && isTargetingLastPoint){
             relativeTurnAngle = angleWrap(angleLockHeading - robot.odometryModule.worldAngleRad);
         }
 
@@ -189,16 +187,16 @@ public class PathFollow implements TelemetryProvider {
         robot.drivetrainModule.yMovement = yPower * moveSpeed;
         robot.drivetrainModule.turnMovement = Range.clip(relativeTurnAngle / Math.toRadians(30), -1, 1) * turnSpeed;
 
-        if (isTargetingLastPoint) {
-            robot.drivetrainModule.xMovement *= Range.clip(distanceToTarget / FOLLOW_RADIUS, 0.25, 1);
-            robot.drivetrainModule.yMovement *= Range.clip(distanceToTarget / FOLLOW_RADIUS, 0.25, 1);
+        if (isTargetingLastPoint){
+            robot.drivetrainModule.xMovement *= Range.clip(distanceToTarget / followRadius, 0.25, 1);
+            robot.drivetrainModule.yMovement *= Range.clip(distanceToTarget / followRadius, 0.25, 1);
         }
     }
 
     private boolean isDone(Waypoint[] path, Point center, double heading) {
         Point endPoint = path[path.length - 1].toPoint();
 
-        return (Math.hypot(center.x - endPoint.x, center.y - endPoint.y) < DISTANCE_THRESHOLD) && (!willAngleLock || Math.abs(angleWrap(angleLockHeading - heading)) < ANGLE_THRESHOLD) && pathIndex == path.length - 2;
+        return (Math.hypot(center.x - endPoint.x, center.y - endPoint.y) < distanceThreshold) && (!willAngleLock || Math.abs(angleWrap(angleLockHeading - heading)) < angleThreshold) && pathIndex == path.length - 2;
     }
 
     public boolean isFileDump() {
@@ -215,5 +213,9 @@ public class PathFollow implements TelemetryProvider {
         data.add("targetY: " + String.valueOf(targetPoint.y));
         data.add("pathIndex: " + String.valueOf(pathIndex));
         return data;
+    }
+
+    public String getName() {
+        return "PathFollower";
     }
 }
